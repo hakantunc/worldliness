@@ -2,7 +2,7 @@ import Html.App as App
 import Html exposing (Html, div, text)
 import Html.Attributes as H
 import Html.Events exposing (onClick)
-import Svg exposing (svg, rect)
+import Svg exposing (svg, g, rect, text')
 import Svg.Attributes as S
 import Array exposing (..)
 
@@ -62,8 +62,8 @@ boardSvgArray brd =
       , H.style [("display", "block"), ("margin", "1em auto")] ]
     (List.concat (toList (map f brd)))
 
-f row = toList (map g row)
-g (x,y,stt) =
+f row = toList (map gg row)
+gg (x,y,stt) =
   let
     clr = case stt of
       Blank -> "beige"
@@ -79,7 +79,13 @@ playerRow player =
       , H.style [("display", "block"), ("margin", "1em auto")]]
       (List.map h (List.map2 (,) [0..bucketSize-1] player))
 h (i, cell) = getRect (i*space + 2) 2
-getRect x y = rect [ S.fill "beige", S.stroke "black", S.x (toString x)
-                   , S.y (toString y), S.width ds, S.height ds
-                   , S.rx curve, S.ry curve
-                   ] []
+getRect x y = g [S.transform ("translate" ++ toString (x,y))]
+                [svg [S.width ds, S.height ds]
+                  [ rect [ S.fill "beige", S.stroke "black"
+                         , S.width ds, S.height ds
+                         , S.rx curve, S.ry curve ] []
+                  , text' [ S.x "50%", S.y "60%"
+                          , S.textAnchor "middle", S.alignmentBaseline "middle"
+                          , S.fontSize "48px"] [text "Y"]
+                  ]
+                ]
