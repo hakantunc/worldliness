@@ -59,8 +59,7 @@ view model =
 
 boardSvgArray brd =
   Svg.svg
-    [ S.width ls, S.height ls, S.viewBox ("0 0 " ++ ls ++ " " ++ ls)
-      , H.style [("display", "block"), ("margin", "1em auto")] ]
+    [ S.class "board", S.width ls, S.height ls, S.viewBox ("0 0 " ++ ls ++ " " ++ ls) ]
     (List.concat (toList (map f brd)))
 
 f row = toList (map gg row)
@@ -77,8 +76,7 @@ playerRow player =
     hs = toString (dimension + 3)
   in
     Svg.svg
-      [S.width ws, S.height hs, S.viewBox ("0 0 " ++ ws ++ " " ++ hs)
-      , H.style [("display", "block"), ("margin", "1em auto")]]
+      [S.class "player", S.width ws, S.height hs, S.viewBox ("0 0 " ++ ws ++ " " ++ hs) ]
       (List.map h (List.map2 (,) [0..bucketSize-1] player))
 h (i, cell) =
   case cell of

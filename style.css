@@ -1,0 +1,11 @@
+.board {
+  display: block;
+  margin: 1em auto
+}
+.player {
+  display: block;
+  margin: 1em auto
+}
+.player g {
+  cursor: move
+}
