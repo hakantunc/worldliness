@@ -8,10 +8,11 @@ import Array exposing (..)
 import String exposing (fromList)
 
 main =
-  App.beginnerProgram
-    { model = model
+  App.program
+    { init = init
     , view = view
     , update = update
+    , subscriptions = subscriptions
     }
 
 
@@ -31,13 +32,21 @@ player = [S 'A', S 'B', S 'C', S 'D', S 'E', S 'F', S 'G']
 model : Model
 model = {board = board, player = player }
 
+init : (Model, Cmd Msg)
+init = (model, Cmd.none)
 
 -- UPDATE
 
 type Msg = Update
 
-update : Msg -> Model -> Model
-update _ model = model
+update : Msg -> Model -> (Model, Cmd Msg)
+update _ model = (model, Cmd.none)
+
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions model = Sub.none
 
 
 -- VIEW
