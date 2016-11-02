@@ -6,6 +6,9 @@ import Svg exposing (svg, g, rect, text')
 import Svg.Attributes as S
 import Array exposing (..)
 import String exposing (fromList)
+import Char
+import Random
+import Task
 
 main =
   App.program
@@ -28,19 +31,34 @@ size = 9
 bucketSize = 7
 row i = initialize size (\j -> (i, j, Blank))
 board = initialize size (\i -> row i)
-player = [S 'A', S 'B', S 'C', S 'D', S 'E', S 'F', S 'G']
+player = List.repeat bucketSize (S ' ')
 model : Model
 model = {board = board, player = player }
 
 init : (Model, Cmd Msg)
-init = (model, Cmd.none)
+init = (model, Task.perform (always Init) (always Init) (Task.succeed 0))
+
 
 -- UPDATE
 
-type Msg = Update
+type Msg = Init | Load (List Int)
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update _ model = (model, Cmd.none)
+update msg model =
+  case msg of
+    Init ->
+      ( model
+      , Random.generate
+          Load
+          (Random.list bucketSize (Random.int (Char.toCode 'A') (Char.toCode 'Z')))
+      )
+    Load vals -> (updatePlayerBucket model vals, Cmd.none)
+
+updatePlayerBucket : Model -> List Int -> Model
+updatePlayerBucket model vals = {
+    board = model.board,
+    player = List.map (\v -> S (Char.fromCode v)) vals
+  }
 
 
 -- SUBSCRIPTIONS
