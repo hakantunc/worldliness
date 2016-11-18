@@ -1,8 +1,7 @@
-import Html.App as App
-import Html exposing (Html, div, text)
+import Html exposing (Html, program, div, text)
 import Html.Attributes as H
 import Html.Events exposing (onClick)
-import Svg exposing (svg, g, rect, text')
+import Svg exposing (svg, g, rect, text_)
 import Svg.Attributes as S
 import Array exposing (..)
 import String exposing (fromList)
@@ -11,7 +10,7 @@ import Random
 import Task
 
 main =
-  App.program
+  program
     { init = init
     , view = view
     , update = update
@@ -36,7 +35,7 @@ model : Model
 model = {board = board, player = player }
 
 init : (Model, Cmd Msg)
-init = (model, Task.perform (always Init) (always Init) (Task.succeed 0))
+init = (model, Task.perform (always Init) (Task.succeed 0))
 
 
 -- UPDATE
@@ -104,7 +103,7 @@ playerRow player =
   in
     Svg.svg
       [S.class "player", S.width ws, S.height hs, S.viewBox ("0 0 " ++ ws ++ " " ++ hs) ]
-      (List.map h (List.map2 (,) [0..bucketSize-1] player))
+      (List.map h (List.map2 (,) (List.range 0 (bucketSize-1)) player))
 h (i, cell) =
   case cell of
     Blank -> getRect (i*space + 2) 2 ' '
@@ -114,7 +113,7 @@ getRect x y c = g [S.transform ("translate" ++ toString (x,y))]
                   [ rect [ S.fill "beige", S.stroke "black"
                          , S.width ds, S.height ds
                          , S.rx curve, S.ry curve ] []
-                  , text' [ S.x "50%", S.y "60%"
+                  , text_ [ S.x "50%", S.y "60%"
                           , S.textAnchor "middle", S.alignmentBaseline "middle"
                           , S.fontSize "48px"] [text (String.fromList [c])]
                   ]
